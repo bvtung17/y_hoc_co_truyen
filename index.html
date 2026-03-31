@@ -311,62 +311,82 @@ body {
   background: var(--card-bg);
   border: 1px solid rgba(193,127,42,0.18);
   border-radius: 16px;
-  padding: 32px;
+  padding: 28px 24px;
   box-shadow: 0 3px 16px var(--shadow);
 }
 .fill-title {
   font-family: 'Lora', serif;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--amber);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
-.fill-instruction { font-size: 0.8rem; color: var(--mist); margin-bottom: 22px; }
+.fill-instruction { font-size: 0.78rem; color: var(--mist); margin-bottom: 18px; }
 
-.fill-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-  margin-bottom: 20px;
-}
-.fill-table th {
-  background: var(--ink);
-  color: var(--parchment);
-  padding: 8px 12px;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.fill-table th:first-child { border-radius: 8px 0 0 0; }
-.fill-table th:last-child { border-radius: 0 8px 0 0; }
-.fill-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--parchment-dark);
-  vertical-align: middle;
-}
-.fill-table tr:nth-child(even) td { background: rgba(193,127,42,0.04); }
+/* Unified ingredient list — works on all screen sizes */
+.fill-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
 
-.fill-input {
-  width: 100%;
-  padding: 5px 10px;
-  border: 2px solid var(--parchment-dark);
-  border-radius: 6px;
-  font-family: 'Source Sans 3', sans-serif;
-  font-size: 0.85rem;
+.fill-item {
   background: white;
-  transition: border-color 0.18s;
-  min-width: 80px;
+  border: 2px solid var(--parchment-dark);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: border-color 0.2s;
 }
-.fill-input:focus { outline: none; border-color: var(--amber); }
-.fill-input.correct { border-color: var(--jade); background: #edf8f2; color: var(--jade); }
-.fill-input.wrong { border-color: var(--crimson); background: #fdf0f2; color: var(--crimson); }
-.fill-input.revealed { border-color: #aaa; background: #f0f0f0; color: #555; font-style: italic; }
+.fill-item.correct { border-color: var(--jade); background: #edf8f2; }
+.fill-item.wrong   { border-color: var(--crimson); background: #fdf0f2; }
+.fill-item.revealed { border-color: #bbb; background: #f5f5f0; }
+
+.fill-item-info { flex: 1; min-width: 0; }
+.fill-item-name { font-weight: 600; font-size: 0.9rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fill-item-dose { font-size: 0.74rem; color: var(--mist); margin-top: 1px; }
+
+/* Role buttons group */
+.role-btns {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.role-btn {
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 2px solid var(--parchment-dark);
+  background: var(--parchment);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--mist);
+  transition: all 0.15s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  min-width: 38px;
+  text-align: center;
+}
+.role-btn:hover { border-color: var(--amber); color: var(--amber); }
+.role-btn.selected-quan { background: #fff3d0; border-color: #c17f2a; color: #8a5510; }
+.role-btn.selected-than { background: #d4f0e2; border-color: #3a7d5c; color: #235c3f; }
+.role-btn.selected-ta   { background: #d4e8f5; border-color: #5588aa; color: #2a5070; }
+.role-btn.selected-su   { background: #ead4ea; border-color: #8855aa; color: #5c2a7a; }
+
+/* When item is answered correctly — show badge */
+.fill-item .role-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.role-badge-quan { background: #fff3d0; color: #8a5510; }
+.role-badge-than { background: #d4f0e2; color: #235c3f; }
+.role-badge-ta   { background: #d4e8f5; color: #2a5070; }
+.role-badge-su   { background: #ead4ea; color: #5c2a7a; }
 
 .fill-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .fill-result {
-  margin-top: 16px;
+  margin-top: 14px;
   padding: 12px 16px;
   border-radius: 10px;
   font-size: 0.88rem;
@@ -397,6 +417,137 @@ body {
 .result-title { font-family: 'Lora', serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
 .result-score { font-size: 2.5rem; font-weight: 700; color: var(--amber); font-family: 'Lora', serif; margin: 12px 0; }
 .result-msg { font-size: 0.9rem; color: var(--mist); margin-bottom: 24px; }
+
+/* ══════════════════════════════════
+   RESPONSIVE — iPhone / Mobile
+══════════════════════════════════ */
+@media (max-width: 600px) {
+
+  /* Header compact */
+  .header {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+  .header-icon { font-size: 22px; }
+  .header h1 { font-size: 1rem; }
+  .header p { font-size: 0.7rem; }
+  .header-stats { gap: 8px; }
+  .stat-badge { padding: 4px 10px; }
+  .stat-badge .num { font-size: 0.95rem; }
+  .stat-badge .lbl { font-size: 0.6rem; }
+
+  /* Tabs full-width equal */
+  .mode-bar { padding: 0; justify-content: stretch; }
+  .mode-tab {
+    flex: 1;
+    padding: 10px 4px;
+    font-size: 0.72rem;
+    letter-spacing: 0;
+    text-align: center;
+  }
+
+  /* Main padding */
+  .main { padding: 16px 14px; }
+
+  /* Controls stack vertically */
+  .controls { flex-direction: column; gap: 8px; }
+  .recipe-selector { width: 100%; min-width: unset; font-size: 0.9rem; }
+  .controls .btn { width: 100%; text-align: center; padding: 11px; font-size: 0.88rem; }
+
+  /* Flashcard — taller on mobile, no fixed height */
+  .flashcard-scene {
+    height: auto;
+    min-height: 300px;
+  }
+  .flashcard { position: relative; min-height: 300px; height: auto; }
+  .card-face {
+    padding: 20px 18px;
+    border-radius: 14px;
+  }
+  /* Front face: static layout */
+  .card-front {
+    position: relative;
+    min-height: 220px;
+    padding: 28px 18px;
+  }
+  .card-title { font-size: 1.25rem; }
+  .card-hint { font-size: 0.73rem; }
+
+  /* Back face: remove absolute positioning for natural height */
+  .card-back {
+    position: relative;
+    transform: none;
+    display: none;
+    min-height: 260px;
+    padding: 20px 18px;
+    border-radius: 14px;
+    overflow-y: visible;
+  }
+  .card-back.visible { display: flex; }
+  .card-front.hidden { display: none; }
+
+  /* Disable 3D flip on mobile — use show/hide instead */
+  .flashcard { transform: none !important; transform-style: flat; }
+
+  .ingredient-grid {
+    grid-template-columns: 1fr;
+    gap: 3px 0;
+    font-size: 0.82rem;
+  }
+  .phan-tich-back { font-size: 0.8rem; }
+  .card-back .back-title { font-size: 0.95rem; }
+
+  /* Nav buttons bigger touch targets */
+  .flashcard-nav { gap: 12px; margin-top: 14px; }
+  .nav-btn { width: 48px; height: 48px; font-size: 1.3rem; }
+  .nav-counter { font-size: 0.85rem; }
+
+  /* Swipe hint */
+  .swipe-hint {
+    display: block;
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--mist);
+    margin-top: 8px;
+  }
+
+  /* Quiz */
+  .quiz-card { padding: 20px 16px; border-radius: 14px; }
+  .quiz-question { font-size: 0.96rem; }
+  .quiz-subtext { font-size: 0.78rem; margin-bottom: 16px; }
+  .quiz-option { padding: 13px 14px; font-size: 0.86rem; }
+  .quiz-option:hover:not(:disabled) { transform: none; }
+  .quiz-feedback { font-size: 0.84rem; padding: 12px 14px; }
+  .score-display { gap: 10px; }
+  .score-box { padding: 10px 8px; }
+  .score-box .s-num { font-size: 1.3rem; }
+  .score-box .s-lbl { font-size: 0.67rem; }
+  .quiz-actions { justify-content: stretch; }
+  .quiz-actions .btn { width: 100%; text-align: center; }
+
+  /* Fill */
+  .fill-card { padding: 18px 14px; border-radius: 14px; }
+  .fill-title { font-size: 0.98rem; }
+  .fill-instruction { font-size: 0.74rem; margin-bottom: 12px; }
+  .fill-item { padding: 9px 10px; gap: 8px; }
+  .fill-item-name { font-size: 0.85rem; }
+  .role-btn { padding: 6px 7px; font-size: 0.73rem; min-width: 34px; }
+  .fill-actions { flex-direction: column; gap: 8px; }
+  .fill-actions .btn { width: 100%; text-align: center; padding: 12px; }
+  .fill-result { font-size: 0.85rem; }
+
+  /* Result overlay */
+  .result-box { padding: 28px 20px; }
+  .result-title { font-size: 1.3rem; }
+  .result-score { font-size: 2rem; }
+  .result-msg { font-size: 0.84rem; }
+
+  /* Progress */
+  .progress-info { font-size: 0.74rem; }
+}
+
+/* Swipe hint hidden on desktop */
+.swipe-hint { display: none; }
 </style>
 </head>
 <body>
@@ -461,6 +612,7 @@ body {
       <span class="nav-counter" id="fc-counter">1 / 35</span>
       <button class="nav-btn" onclick="nextCard()">›</button>
     </div>
+    <div class="swipe-hint">← vuốt trái/phải để chuyển · chạm để lật</div>
   </div>
 
   <!-- ── QUIZ MODE ── -->
@@ -484,13 +636,8 @@ body {
   <div id="mode-fill" style="display:none">
     <div class="fill-card">
       <div class="fill-title" id="fill-title">Bài 1: Bách hợp cổ kim thang</div>
-      <div class="fill-instruction">Điền vai trò (Quân / Thần / Tá / Sứ) cho từng dược liệu</div>
-      <table class="fill-table">
-        <thead>
-          <tr><th>Dược liệu</th><th>Liều</th><th>Vai trò</th><th>Dược liệu</th><th>Liều</th><th>Vai trò</th></tr>
-        </thead>
-        <tbody id="fill-tbody"></tbody>
-      </table>
+      <div class="fill-instruction">Chọn vai trò đúng (Quân / Thần / Tá / Sứ) cho từng dược liệu</div>
+      <div class="fill-list" id="fill-list"></div>
       <div class="fill-actions">
         <button class="btn btn-jade" onclick="checkFill()">✓ Kiểm tra</button>
         <button class="btn btn-secondary" onclick="revealFill()">👁 Xem đáp án</button>
@@ -1049,13 +1196,24 @@ function updateProgress() {
 }
 
 // ══════════════════════════════════════════════════════
-// FLASHCARD
+// MOBILE DETECTION
+// ══════════════════════════════════════════════════════
+const isMobile = () => window.innerWidth <= 600;
+
+// ══════════════════════════════════════════════════════
+// FLASHCARD — mobile uses show/hide, desktop uses 3D flip
 // ══════════════════════════════════════════════════════
 function renderFlash() {
   const rec = RECIPES[order[fcIndex]];
   fcFlipped = false;
   const card = document.getElementById('flashcard');
+  const front = document.getElementById('card-front');
+  const back = document.getElementById('card-back');
+
+  // Reset state
   card.classList.remove('flipped');
+  front.classList.remove('hidden');
+  back.classList.remove('visible');
 
   document.getElementById('fc-num').textContent = `Bài ${String(rec.id).padStart(2,'0')}`;
   document.getElementById('fc-title').textContent = rec.name;
@@ -1087,7 +1245,18 @@ function renderFlash() {
 
 function flipCard() {
   fcFlipped = !fcFlipped;
-  document.getElementById('flashcard').classList.toggle('flipped', fcFlipped);
+  const front = document.getElementById('card-front');
+  const back = document.getElementById('card-back');
+  const card = document.getElementById('flashcard');
+
+  if (isMobile()) {
+    // Mobile: toggle visibility
+    front.classList.toggle('hidden', fcFlipped);
+    back.classList.toggle('visible', fcFlipped);
+  } else {
+    // Desktop: 3D flip
+    card.classList.toggle('flipped', fcFlipped);
+  }
 }
 
 function nextCard() {
@@ -1098,6 +1267,24 @@ function nextCard() {
 function prevCard() {
   if (fcIndex > 0) { fcIndex--; renderFlash(); }
 }
+
+// Touch swipe for flashcard
+(function() {
+  let touchStartX = 0, touchStartY = 0;
+  const scene = document.getElementById('mode-flash');
+  scene.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, {passive:true});
+  scene.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      if (dx < 0) nextCard();
+      else prevCard();
+    }
+  }, {passive:true});
+})();
 
 // ══════════════════════════════════════════════════════
 // QUIZ
@@ -1238,74 +1425,115 @@ function updateQScore() {
 }
 
 // ══════════════════════════════════════════════════════
-// FILL IN THE BLANK
+// FILL IN THE BLANK — button select system
 // ══════════════════════════════════════════════════════
+const ROLES = ['Quân','Thần','Tá','Sứ'];
+const ROLE_CLASS = {Quân:'quan',Thần:'than',Tá:'ta',Sứ:'su'};
+
 function renderFill() {
   const rec = RECIPES[order[fillIndex % order.length]];
   document.getElementById('fill-title').textContent = `Bài ${rec.id}: ${rec.name}`;
   document.getElementById('fill-result').className = 'fill-result';
   document.getElementById('fill-result').innerHTML = '';
 
-  const tbody = document.getElementById('fill-tbody');
-  tbody.innerHTML = '';
-
-  // Pair up ingredients
   const ings = [...rec.ingredients];
-  // Randomly blank ~half roles
-  const blankSet = new Set();
-  ings.forEach((_,i) => { if(Math.random()>0.35) blankSet.add(i); });
-  if(blankSet.size===0) blankSet.add(0);
 
-  for(let i=0;i<ings.length;i+=2){
-    const a=ings[i], b=ings[i+1];
-    const tr=document.createElement('tr');
-    const aBlank = blankSet.has(i);
-    const bBlank = b && blankSet.has(i+1);
-    tr.innerHTML = `
-      <td>${a.name}</td>
-      <td>${a.dose}</td>
-      <td>${aBlank?`<input class="fill-input" data-answer="${a.role}" placeholder="?">`:`<span style="color:var(--jade);font-weight:600">${a.role}</span>`}</td>
-      ${b?`<td>${b.name}</td><td>${b.dose}</td><td>${bBlank?`<input class="fill-input" data-answer="${b.role}" placeholder="?">`:`<span style="color:var(--jade);font-weight:600">${b.role}</span>`}</td>`:`<td colspan="3"></td>`}
-    `;
-    tbody.appendChild(tr);
-  }
+  // Randomly decide which items are blanked (~65%)
+  const blankSet = new Set();
+  ings.forEach((_,i) => { if(Math.random() > 0.35) blankSet.add(i); });
+  if(blankSet.size === 0) blankSet.add(0);
+
+  const list = document.getElementById('fill-list');
+  list.innerHTML = '';
+
+  ings.forEach((ing, i) => {
+    const isBlank = blankSet.has(i);
+    const rc = ROLE_CLASS[ing.role] || 'ta';
+    const item = document.createElement('div');
+    item.className = 'fill-item';
+    item.dataset.answer = ing.role;
+    item.dataset.blank = isBlank ? '1' : '0';
+
+    if (!isBlank) {
+      // Already revealed — show name + fixed badge
+      item.innerHTML = `
+        <div class="fill-item-info">
+          <div class="fill-item-name">${ing.name}</div>
+          <div class="fill-item-dose">${ing.dose}</div>
+        </div>
+        <span class="role-badge role-badge-${rc}">${ing.role}</span>
+      `;
+    } else {
+      // Blank — show 4 role buttons
+      const btns = ROLES.map(r => {
+        const c = ROLE_CLASS[r];
+        return `<button class="role-btn" data-role="${r}" onclick="selectRole(this)">${r}</button>`;
+      }).join('');
+      item.innerHTML = `
+        <div class="fill-item-info">
+          <div class="fill-item-name">${ing.name}</div>
+          <div class="fill-item-dose">${ing.dose}</div>
+        </div>
+        <div class="role-btns">${btns}</div>
+      `;
+    }
+    list.appendChild(item);
+  });
 
   studiedSet.add(rec.id);
   updateProgress();
 }
 
-function normalize(s) {
-  return s.toLowerCase().trim()
-    .replace(/quân/g,'quan').replace(/thần/g,'than').replace(/tá/g,'ta').replace(/sứ/g,'su');
+function selectRole(btn) {
+  // Toggle selection within this item's button group
+  const item = btn.closest('.fill-item');
+  if (item.classList.contains('correct') || item.classList.contains('revealed')) return;
+  item.querySelectorAll('.role-btn').forEach(b => {
+    b.classList.remove('selected-quan','selected-than','selected-ta','selected-su');
+  });
+  const c = ROLE_CLASS[btn.dataset.role] || 'ta';
+  btn.classList.add(`selected-${c}`);
+}
+
+function getSelectedRole(item) {
+  const btn = item.querySelector('.role-btn.selected-quan, .role-btn.selected-than, .role-btn.selected-ta, .role-btn.selected-su');
+  return btn ? btn.dataset.role : null;
 }
 
 function checkFill() {
-  const inputs = document.querySelectorAll('#fill-tbody .fill-input');
-  let correct=0, total=inputs.length;
-  inputs.forEach(inp => {
-    const ans = inp.dataset.answer;
-    const val = inp.value.trim();
-    if(!val){ inp.classList.remove('correct','wrong'); return; }
-    const ok = normalize(val)===normalize(ans) || val.toLowerCase()===ans.toLowerCase();
-    inp.classList.toggle('correct',ok);
-    inp.classList.toggle('wrong',!ok);
-    if(ok){correct++;}
+  const items = document.querySelectorAll('#fill-list .fill-item[data-blank="1"]');
+  let correct = 0, answered = 0;
+  items.forEach(item => {
+    const selected = getSelectedRole(item);
+    if (!selected) return;
+    answered++;
+    const ok = selected === item.dataset.answer;
+    item.classList.toggle('correct', ok);
+    item.classList.toggle('wrong', !ok);
+    if (ok) correct++;
   });
-  const filled = [...inputs].filter(i=>i.value.trim()).length;
   const res = document.getElementById('fill-result');
-  res.className='fill-result show';
-  if(filled===0){ res.innerHTML='⚠️ Hãy điền vào các ô trước.'; return; }
-  res.innerHTML = `Đúng <b>${correct}/${filled}</b> ô đã điền.${correct===total?` 🎉 Hoàn hảo!`:''}`;
-  if(correct===filled && filled===total){ totalCorrect++; updateProgress(); }
+  res.className = 'fill-result show';
+  if (answered === 0) { res.innerHTML = '⚠️ Hãy chọn vai trò cho ít nhất một dược liệu.'; return; }
+  const total = items.length;
+  res.innerHTML = `Đúng <b>${correct}/${answered}</b> câu đã chọn.${correct === total ? ' 🎉 Hoàn hảo!' : ''}`;
+  if (correct === total) { totalCorrect++; updateProgress(); }
 }
 
 function revealFill() {
-  document.querySelectorAll('#fill-tbody .fill-input').forEach(inp => {
-    inp.value = inp.dataset.answer;
-    inp.classList.add('revealed');
-    inp.classList.remove('correct','wrong');
-    inp.disabled = true;
+  document.querySelectorAll('#fill-list .fill-item[data-blank="1"]').forEach(item => {
+    const ans = item.dataset.answer;
+    const rc = ROLE_CLASS[ans] || 'ta';
+    // Replace button group with badge
+    const btnsDiv = item.querySelector('.role-btns');
+    if (btnsDiv) {
+      btnsDiv.outerHTML = `<span class="role-badge role-badge-${rc}">${ans}</span>`;
+    }
+    item.classList.remove('correct','wrong');
+    item.classList.add('revealed');
   });
+  document.getElementById('fill-result').className = 'fill-result show';
+  document.getElementById('fill-result').innerHTML = '👁 Đáp án đã hiển thị.';
 }
 
 function nextFill() {
