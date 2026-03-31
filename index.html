@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Học Thang Thuốc Cổ Truyền</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1208;
+  --parchment: #f5efe0;
+  --parchment-dark: #ede4cc;
+  --amber: #c17f2a;
+  --amber-light: #e8a94a;
+  --jade: #3a7d5c;
+  --jade-light: #4fa876;
+  --crimson: #9b2335;
+  --crimson-light: #c73d52;
+  --mist: #8b8070;
+  --card-bg: #fdfaf3;
+  --shadow: rgba(26,18,8,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--parchment);
+  color: var(--ink);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(193,127,42,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(58,125,92,0.06) 0%, transparent 50%);
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--ink);
+  color: var(--parchment);
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 12px var(--shadow);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-icon { font-size: 28px; }
+.header h1 {
+  font-family: 'Lora', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.header p { font-size: 0.78rem; color: #b0a890; margin-top: 1px; }
+.header-stats {
+  margin-left: auto;
+  display: flex; gap: 20px;
+}
+.stat-badge {
+  text-align: center;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 6px 14px;
+}
+.stat-badge .num { font-size: 1.1rem; font-weight: 600; color: var(--amber-light); }
+.stat-badge .lbl { font-size: 0.68rem; color: #8a7f6a; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ── MODE TABS ── */
+.mode-bar {
+  display: flex;
+  gap: 0;
+  background: var(--ink);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 0 32px;
+}
+.mode-tab {
+  padding: 10px 22px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #7a7060;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+.mode-tab:hover { color: var(--parchment); }
+.mode-tab.active { color: var(--amber-light); border-bottom-color: var(--amber-light); }
+
+/* ── MAIN LAYOUT ── */
+.main { padding: 28px 32px; max-width: 860px; margin: 0 auto; }
+
+/* ── CONTROLS ROW ── */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.recipe-selector {
+  flex: 1; min-width: 220px;
+  padding: 9px 14px;
+  border: 1px solid var(--parchment-dark);
+  border-radius: 8px;
+  background: var(--card-bg);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.88rem;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+.btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  border: none;
+}
+.btn-primary { background: var(--amber); color: white; }
+.btn-primary:hover { background: var(--amber-light); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(193,127,42,0.35); }
+.btn-secondary { background: var(--parchment-dark); color: var(--ink); }
+.btn-secondary:hover { background: #ddd5bb; }
+.btn-jade { background: var(--jade); color: white; }
+.btn-jade:hover { background: var(--jade-light); transform: translateY(-1px); }
+.btn-danger { background: var(--crimson); color: white; }
+.btn-danger:hover { background: var(--crimson-light); }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap { margin-bottom: 20px; }
+.progress-info { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--mist); margin-bottom: 5px; }
+.progress-bar { height: 6px; background: var(--parchment-dark); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--amber), var(--jade)); border-radius: 3px; transition: width 0.4s ease; }
+
+/* ══════════════════════════════════
+   FLASH CARD
+══════════════════════════════════ */
+.flashcard-scene {
+  perspective: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 680px;
+  height: 360px;
+  cursor: pointer;
+  user-select: none;
+}
+.flashcard {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 24px var(--shadow), 0 1px 4px rgba(0,0,0,0.06);
+}
+.card-front {
+  background: var(--card-bg);
+  border: 1px solid rgba(193,127,42,0.2);
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px;
+}
+.card-back {
+  background: var(--ink);
+  color: var(--parchment);
+  transform: rotateY(180deg);
+  display: flex; flex-direction: column; gap: 8px; overflow-y: auto;
+}
+.card-number {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 4px;
+}
+.card-title {
+  font-family: 'Lora', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.3;
+}
+.card-hint { font-size: 0.78rem; color: var(--mist); margin-top: 8px; }
+.card-flip-icon { font-size: 1.4rem; color: var(--amber-light); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:0.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.12)} }
+
+.card-back .back-title {
+  font-family: 'Lora', serif;
+  font-size: 1rem; font-weight: 600;
+  color: var(--amber-light);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 6px; margin-bottom: 4px;
+}
+.ingredient-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 12px;
+  font-size: 0.8rem;
+}
+.ing-row { display: contents; }
+.ing-name { color: #e8dfc8; }
+.ing-dose { color: var(--amber-light); font-weight: 600; }
+.ing-role { color: #7bba97; font-size: 0.74rem; }
+
+.phan-tich-back {
+  margin-top: 8px;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+.role-line { margin-bottom: 3px; }
+.role-quan { color: #ffd080; font-weight: 600; }
+.role-than { color: #90d4ac; }
+.role-ta { color: #a8c8e8; }
+.role-su { color: #d4a8d4; }
+
+.flashcard-nav {
+  display: flex; justify-content: center; align-items: center;
+  gap: 16px; margin-top: 20px;
+}
+.nav-btn {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 2px solid var(--parchment-dark);
+  background: var(--card-bg);
+  font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s;
+  color: var(--ink);
+}
+.nav-btn:hover { background: var(--amber); color: white; border-color: var(--amber); transform: scale(1.1); }
+.nav-counter { font-size: 0.82rem; color: var(--mist); font-weight: 600; min-width: 70px; text-align: center; }
+
+/* ══════════════════════════════════
+   QUIZ
+══════════════════════════════════ */
+.quiz-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(193,127,42,0.18);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 3px 16px var(--shadow);
+}
+.quiz-question {
+  font-family: 'Lora', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.quiz-subtext { font-size: 0.82rem; color: var(--mist); margin-bottom: 24px; }
+
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option {
+  padding: 12px 18px;
+  border: 2px solid var(--parchment-dark);
+  border-radius: 10px;
+  background: white;
+  text-align: left;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.18s;
+  line-height: 1.4;
+}
+.quiz-option:hover:not(:disabled) { border-color: var(--amber); background: #fdf6e8; transform: translateX(4px); }
+.quiz-option.correct { border-color: var(--jade); background: #edf8f2; color: var(--jade); font-weight: 600; }
+.quiz-option.wrong { border-color: var(--crimson); background: #fdf0f2; color: var(--crimson); }
+.quiz-option.reveal { border-color: var(--jade); background: #edf8f2; opacity: 0.7; }
+.quiz-option:disabled { cursor: default; }
+
+.quiz-feedback {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.good { background: #edf8f2; border-left: 4px solid var(--jade); color: #2a6344; }
+.quiz-feedback.bad { background: #fdf0f2; border-left: 4px solid var(--crimson); color: #7a1e2c; }
+
+.quiz-actions { margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end; }
+
+.score-display {
+  display: flex; gap: 20px;
+  margin-bottom: 20px;
+}
+.score-box {
+  flex: 1; text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.score-box.correct-box { background: #edf8f2; color: var(--jade); }
+.score-box.wrong-box { background: #fdf0f2; color: var(--crimson); }
+.score-box .s-num { font-size: 1.6rem; font-family: 'Lora', serif; }
+.score-box .s-lbl { font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.8; }
+
+/* ══════════════════════════════════
+   FILL IN THE BLANK
+══════════════════════════════════ */
+.fill-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(193,127,42,0.18);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 3px 16px var(--shadow);
+}
+.fill-title {
+  font-family: 'Lora', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--amber);
+  margin-bottom: 6px;
+}
+.fill-instruction { font-size: 0.8rem; color: var(--mist); margin-bottom: 22px; }
+
+.fill-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+.fill-table th {
+  background: var(--ink);
+  color: var(--parchment);
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.fill-table th:first-child { border-radius: 8px 0 0 0; }
+.fill-table th:last-child { border-radius: 0 8px 0 0; }
+.fill-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--parchment-dark);
+  vertical-align: middle;
+}
+.fill-table tr:nth-child(even) td { background: rgba(193,127,42,0.04); }
+
+.fill-input {
+  width: 100%;
+  padding: 5px 10px;
+  border: 2px solid var(--parchment-dark);
+  border-radius: 6px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.85rem;
+  background: white;
+  transition: border-color 0.18s;
+  min-width: 80px;
+}
+.fill-input:focus { outline: none; border-color: var(--amber); }
+.fill-input.correct { border-color: var(--jade); background: #edf8f2; color: var(--jade); }
+.fill-input.wrong { border-color: var(--crimson); background: #fdf0f2; color: var(--crimson); }
+.fill-input.revealed { border-color: #aaa; background: #f0f0f0; color: #555; font-style: italic; }
+
+.fill-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.fill-result {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  display: none;
+}
+.fill-result.show { display: block; background: var(--parchment-dark); }
+
+/* ── RESULT OVERLAY ── */
+.result-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(26,18,8,0.75);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.result-overlay.show { display: flex; }
+.result-box {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.result-emoji { font-size: 3rem; margin-bottom: 12px; }
+.result-title { font-family: 'Lora', serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
+.result-score { font-size: 2.5rem; font-weight: 700; color: var(--amber); font-family: 'Lora', serif; margin: 12px 0; }
+.result-msg { font-size: 0.9rem; color: var(--mist); margin-bottom: 24px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-icon">🌿</div>
+  <div>
+    <h1>Học Thang Thuốc Cổ Truyền</h1>
+    <p>35 bài thuốc · Quân — Thần — Tá — Sứ</p>
+  </div>
+  <div class="header-stats">
+    <div class="stat-badge"><div class="num" id="stat-correct">0</div><div class="lbl">Đúng</div></div>
+    <div class="stat-badge"><div class="num" id="stat-studied">0</div><div class="lbl">Đã học</div></div>
+  </div>
+</div>
+
+<div class="mode-bar">
+  <button class="mode-tab active" onclick="switchMode('flash')">🃏 Flashcard</button>
+  <button class="mode-tab" onclick="switchMode('quiz')">📝 Trắc nghiệm</button>
+  <button class="mode-tab" onclick="switchMode('fill')">✏️ Điền từ</button>
+</div>
+
+<div class="main">
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <select class="recipe-selector" id="recipe-select" onchange="onRecipeChange()">
+      <option value="all">Tất cả 35 bài thuốc</option>
+    </select>
+    <button class="btn btn-secondary" onclick="shuffleOrder()">🔀 Ngẫu nhiên</button>
+    <button class="btn btn-primary" onclick="resetSession()">↺ Bắt đầu lại</button>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span id="progress-text">Bài 1 / 35</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- ── FLASHCARD MODE ── -->
+  <div id="mode-flash">
+    <div class="flashcard-scene" onclick="flipCard()">
+      <div class="flashcard" id="flashcard">
+        <div class="card-face card-front" id="card-front">
+          <div class="card-number" id="fc-num">Bài 01</div>
+          <div class="card-title" id="fc-title">Bách hợp cổ kim thang</div>
+          <div class="card-hint">Nhấp để xem thành phần & phân tích</div>
+          <div class="card-flip-icon">↻</div>
+        </div>
+        <div class="card-face card-back" id="card-back">
+          <div class="back-title" id="fc-back-title">Bách hợp cổ kim thang</div>
+          <div class="ingredient-grid" id="fc-ingredients"></div>
+          <div class="phan-tich-back" id="fc-phan-tich"></div>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard-nav">
+      <button class="nav-btn" onclick="prevCard()">‹</button>
+      <span class="nav-counter" id="fc-counter">1 / 35</span>
+      <button class="nav-btn" onclick="nextCard()">›</button>
+    </div>
+  </div>
+
+  <!-- ── QUIZ MODE ── -->
+  <div id="mode-quiz" style="display:none">
+    <div class="score-display">
+      <div class="score-box correct-box"><div class="s-num" id="q-correct">0</div><div class="s-lbl">✓ Đúng</div></div>
+      <div class="score-box wrong-box"><div class="s-num" id="q-wrong">0</div><div class="s-lbl">✗ Sai</div></div>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-question" id="q-question">Câu hỏi</div>
+      <div class="quiz-subtext" id="q-subtext"></div>
+      <div class="quiz-options" id="q-options"></div>
+      <div class="quiz-feedback" id="q-feedback"></div>
+      <div class="quiz-actions">
+        <button class="btn btn-secondary" id="q-next-btn" onclick="nextQuestion()" style="display:none">Câu tiếp →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FILL MODE ── -->
+  <div id="mode-fill" style="display:none">
+    <div class="fill-card">
+      <div class="fill-title" id="fill-title">Bài 1: Bách hợp cổ kim thang</div>
+      <div class="fill-instruction">Điền vai trò (Quân / Thần / Tá / Sứ) cho từng dược liệu</div>
+      <table class="fill-table">
+        <thead>
+          <tr><th>Dược liệu</th><th>Liều</th><th>Vai trò</th><th>Dược liệu</th><th>Liều</th><th>Vai trò</th></tr>
+        </thead>
+        <tbody id="fill-tbody"></tbody>
+      </table>
+      <div class="fill-actions">
+        <button class="btn btn-jade" onclick="checkFill()">✓ Kiểm tra</button>
+        <button class="btn btn-secondary" onclick="revealFill()">👁 Xem đáp án</button>
+        <button class="btn btn-primary" onclick="nextFill()">Bài tiếp →</button>
+      </div>
+      <div class="fill-result" id="fill-result"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- RESULT OVERLAY -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-box">
+    <div class="result-emoji" id="res-emoji">🎉</div>
+    <div class="result-title">Kết quả</div>
+    <div class="result-score" id="res-score">—</div>
+    <div class="result-msg" id="res-msg"></div>
+    <button class="btn btn-primary" onclick="closeResult()">Tiếp tục học</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// DATA — 35 bài thuốc
+// ══════════════════════════════════════════════════════
+const RECIPES = [
+  { id:1, name:"Bách hợp cổ kim thang",
+    ingredients:[
+      {name:"Sinh địa",dose:"8g",role:"Quân"},
+      {name:"Thục địa",dose:"12g",role:"Quân"},
+      {name:"Bách hợp",dose:"10g",role:"Quân"},
+      {name:"Mạch môn",dose:"8g",role:"Thần"},
+      {name:"Huyền sâm",dose:"6g",role:"Thần"},
+      {name:"Đương quy",dose:"6g",role:"Tá"},
+      {name:"Bạch thược",dose:"6g",role:"Tá"},
+      {name:"Cam thảo",dose:"4g",role:"Sứ"},
+      {name:"Cát cánh",dose:"6g",role:"Tá"},
+    ],
+    phanTich:["Bách hợp, sinh địa, thục địa: Quân","Mạch môn, huyền sâm: Thần","Đương quy, bạch thược, cát cánh: Tá","Cam thảo: Sứ"]
+  },
+  { id:2, name:"Bán hạ bạch truật thiên ma thang",
+    ingredients:[
+      {name:"Bán hạ chế",dose:"8g",role:"Quân"},
+      {name:"Trần bì",dose:"8g",role:"Tá"},
+      {name:"Bạch linh",dose:"12g",role:"Thần"},
+      {name:"Bạch truật",dose:"12g",role:"Thần"},
+      {name:"Thiên ma",dose:"8g",role:"Quân"},
+      {name:"Cam thảo",dose:"4g",role:"Sứ"},
+    ],
+    phanTich:["Bán hạ, thiên ma: Quân","Bạch truật, bạch linh: Thần","Trần bì: Tá","Cam thảo: Sứ"]
+  },
+  { id:3, name:"Bán hạ hậu phác thang",
+    ingredients:[
+      {name:"Bán hạ chế",dose:"8g",role:"Quân"},
+      {name:"Hậu phác",dose:"6g",role:"Quân"},
+      {name:"Bạch linh",dose:"8g",role:"Thần"},
+      {name:"Sinh khương",dose:"6g",role:"Tá"},
+      {name:"Tô diệp",dose:"6g",role:"Sứ"},
+    ],
+    phanTich:["Bán hạ, hậu phác: Quân","Bạch linh: Thần","Sinh khương: Tá","Tô diệp: Sứ"]
+  },
+  { id:4, name:"Bảo hòa hoàn",
+    ingredients:[
+      {name:"Sơn tra",dose:"60g",role:"Quân"},
+      {name:"Thần khúc",dose:"20g",role:"Quân"},
+      {name:"Bán hạ chế",dose:"30g",role:"Thần"},
+      {name:"Bạch linh",dose:"30g",role:"Thần"},
+      {name:"Trần bì",dose:"10g",role:"Thần"},
+      {name:"Liên kiều",dose:"10g",role:"Tá"},
+      {name:"La bạc tử",dose:"10g",role:"Quân"},
+    ],
+    phanTich:["Sơn tra, thần khúc, la bạc tử: Quân","Bán hạ, trần bì, bạch linh: Thần","Liên kiều: Tá","Bạch linh: Sứ"]
+  },
+  { id:5, name:"Bát trân thang",
+    ingredients:[
+      {name:"Nhân sâm",dose:"12g",role:"Quân"},
+      {name:"Bạch linh",dose:"12g",role:"Tá"},
+      {name:"Bạch truật",dose:"12g",role:"Thần"},
+      {name:"Cam thảo trích",dose:"6g",role:"Sứ"},
+      {name:"Xuyên khung",dose:"8g",role:"Sứ"},
+      {name:"Đương quy",dose:"12g",role:"Thần"},
+      {name:"Thục địa",dose:"12g",role:"Quân"},
+      {name:"Bạch thược",dose:"12g",role:"Tá"},
+    ],
+    phanTich:["Nhân sâm, thục địa: Quân","Bạch truật, đương quy: Thần","Bạch linh, bạch thược: Tá","Cam thảo, xuyên khung: Sứ"]
+  },
+  { id:6, name:"Bình vị tán",
+    ingredients:[
+      {name:"Thương truật",dose:"32g",role:"Quân"},
+      {name:"Trần bì",dose:"20g",role:"Tá"},
+      {name:"Hậu phác",dose:"20g",role:"Thần"},
+      {name:"Cam thảo",dose:"12g",role:"Sứ"},
+    ],
+    phanTich:["Thương truật: Quân","Hậu phác: Thần","Trần bì: Tá","Cam thảo: Sứ"]
+  },
+  { id:7, name:"Bổ trung ích khí thang",
+    ingredients:[
+      {name:"Nhân sâm",dose:"12g",role:"Quân"},
+      {name:"Đương quy",dose:"8g",role:"Thần"},
+      {name:"Bạch truật",dose:"12g",role:"Thần"},
+      {name:"Cam thảo",dose:"6g",role:"Sứ"},
+      {name:"Hoàng kì",dose:"12g",role:"Quân"},
+      {name:"Trần bì",dose:"4g",role:"Thần"},
+      {name:"Sài hồ",dose:"6g",role:"Tá"},
+      {name:"Thăng ma",dose:"6g",role:"Tá"},
+    ],
+    phanTich:["Nhân sâm, hoàng kỳ: Quân","Bạch truật, trần bì, cam thảo, đương quy: Thần","Sài hồ, thăng ma: Tá","Cam thảo: Sứ"]
+  },
+  { id:8, name:"Bổ can thang",
+    ingredients:[
+      {name:"Thục địa",dose:"12g",role:"Quân"},
+      {name:"Đương quy",dose:"12g",role:"Thần"},
+      {name:"Bạch thược",dose:"12g",role:"Tá"},
+      {name:"Xuyên khung",dose:"8g",role:"Sứ"},
+      {name:"Mạch môn",dose:"12g",role:"Tá"},
+      {name:"Mộc qua",dose:"8g",role:"Tá"},
+      {name:"Táo nhân",dose:"8g",role:"Tá"},
+      {name:"Can khương",dose:"4g",role:"Tá"},
+    ],
+    phanTich:["Thục địa: Quân","Đương quy: Thần","Bạch thược, mạch môn, mộc qua, táo nhân, can khương: Tá","Xuyên khung: Sứ"]
+  },
+  { id:9, name:"Bối mẫu qua lâu thang",
+    ingredients:[
+      {name:"Bối mẫu",dose:"6g",role:"Quân"},
+      {name:"Qua lâu nhân",dose:"4g",role:"Quân"},
+      {name:"Thiên hoa phấn",dose:"3g",role:"Thần"},
+      {name:"Bạch linh",dose:"3g",role:"Tá"},
+      {name:"Trần bì",dose:"3g",role:"Tá"},
+      {name:"Cát cánh",dose:"3g",role:"Tá"},
+    ],
+    phanTich:["Bối mẫu, qua lâu: Quân","Thiên hoa phấn: Thần","Trần bì, cát cánh, bạch linh: Tá","Bạch linh, trần bì: Sứ"]
+  },
+  { id:10, name:"Chân vũ thang",
+    ingredients:[
+      {name:"Phụ tử chế",dose:"8g",role:"Quân"},
+      {name:"Bạch linh",dose:"12g",role:"Thần"},
+      {name:"Bạch truật",dose:"8g",role:"Thần"},
+      {name:"Sinh khương",dose:"8g",role:"Tá"},
+      {name:"Bạch thược",dose:"12g",role:"Sứ"},
+    ],
+    phanTich:["Phụ tử chế: Quân","Bạch linh, bạch truật: Thần","Sinh khương: Tá","Bạch thược: Sứ"]
+  },
+  { id:11, name:"Chỉ thực đạo trệ hoàn",
+    ingredients:[
+      {name:"Đại hoàng",dose:"40g",role:"Quân"},
+      {name:"Chỉ thực",dose:"20g",role:"Quân"},
+      {name:"Thần khúc",dose:"20g",role:"Tá"},
+      {name:"Bạch linh",dose:"12g",role:"Tá"},
+      {name:"Hoàng cầm",dose:"12g",role:"Thần"},
+      {name:"Hoàng liên",dose:"12g",role:"Thần"},
+      {name:"Bạch truật",dose:"12g",role:"Tá"},
+      {name:"Trạch tả",dose:"8g",role:"Tá"},
+    ],
+    phanTich:["Đại hoàng, chỉ thực: Quân","Hoàng liên, hoàng cầm: Thần","Thần khúc, bạch truật, bạch linh, trạch tả: Tá","Bạch linh, trạch tả: Sứ"]
+  },
+  { id:12, name:"Chỉ thực tiêu bĩ hoàn",
+    ingredients:[
+      {name:"Chỉ thực",dose:"20g",role:"Quân"},
+      {name:"Bán hạ chế",dose:"12g",role:"Thần"},
+      {name:"Mạch nha",dose:"8g",role:"Thần"},
+      {name:"Hậu phác",dose:"16g",role:"Thần"},
+      {name:"Bạch linh",dose:"8g",role:"Tá"},
+      {name:"Bạch truật",dose:"8g",role:"Tá"},
+      {name:"Cam thảo trích",dose:"4g",role:"Sứ"},
+      {name:"Can khương",dose:"4g",role:"Tá"},
+      {name:"Đảng sâm",dose:"12g",role:"Tá"},
+      {name:"Hoàng liên",dose:"20g",role:"Tá"},
+    ],
+    phanTich:["Chỉ thực: Quân","Bán hạ, mạch nha, hậu phác: Thần","Cam thảo, can khương, bạch linh, bạch truật, đảng sâm, hoàng liên: Tá","Cam thảo: Sứ"]
+  },
+  { id:13, name:"Cửu vị khương hoạt thang",
+    ingredients:[
+      {name:"Khương hoạt",dose:"6g",role:"Quân"},
+      {name:"Phòng phong",dose:"6g",role:"Thần"},
+      {name:"Thương truật",dose:"6g",role:"Thần"},
+      {name:"Tế tân",dose:"2g",role:"Thần"},
+      {name:"Xuyên khung",dose:"4g",role:"Thần"},
+      {name:"Bạch chỉ",dose:"4g",role:"Thần"},
+      {name:"Sinh địa",dose:"4g",role:"Tá"},
+      {name:"Hoàng cầm",dose:"4g",role:"Tá"},
+      {name:"Cam thảo",dose:"4g",role:"Sứ"},
+    ],
+    phanTich:["Khương hoạt: Quân","Phòng phong, thương truật, tế tân, xuyên khung, bạch chỉ: Thần","Sinh địa, hoàng cầm, cam thảo: Tá","Cam thảo: Sứ"]
+  },
+  { id:14, name:"Dưỡng âm thanh phế thang",
+    ingredients:[
+      {name:"Sinh địa",dose:"16g",role:"Quân"},
+      {name:"Mạch môn",dose:"12g",role:"Quân"},
+      {name:"Huyền sâm",dose:"12g",role:"Quân"},
+      {name:"Đan bì",dose:"6g",role:"Thần"},
+      {name:"Bạch thược",dose:"6g",role:"Thần"},
+      {name:"Cam thảo",dose:"8g",role:"Sứ"},
+      {name:"Bối mẫu",dose:"6g",role:"Tá"},
+      {name:"Bạc hà",dose:"4g",role:"Tá"},
+    ],
+    phanTich:["Sinh địa, mạch môn, huyền sâm: Quân","Đan bì, bạch thược: Thần","Cam thảo, bối mẫu, bạc hà: Tá","Cam thảo: Sứ"]
+  },
+  { id:15, name:"Dưỡng âm thanh nhiệt thang",
+    ingredients:[
+      {name:"Bách bộ",dose:"80g",role:"Quân"},
+      {name:"Tang bạch bì",dose:"20g",role:"Thần"},
+      {name:"Mạch môn",dose:"20g",role:"Thần"},
+      {name:"Tang diệp",dose:"20g",role:"Tá"},
+      {name:"Cam thảo",dose:"20g",role:"Sứ"},
+    ],
+    phanTich:["Bách bộ: Quân","Tang bạch bì, mạch môn, cam thảo: Thần","Tang diệp: Tá","Cam thảo: Sứ"]
+  },
+  { id:16, name:"Đào nhân thừa khí thang",
+    ingredients:[
+      {name:"Đào nhân",dose:"—",role:"Quân"},
+      {name:"Đại hoàng",dose:"—",role:"Quân"},
+      {name:"Đan bì",dose:"—",role:"Thần"},
+      {name:"Mang tiêu",dose:"—",role:"Thần"},
+      {name:"Bạch thược",dose:"—",role:"Thần"},
+      {name:"Đương quy",dose:"—",role:"Tá"},
+    ],
+    phanTich:["Đào nhân, đại hoàng: Quân","Đan bì, bạch thược, mang tiêu: Thần","Đương quy: Tá"]
+  },
+  { id:17, name:"Đại thanh long thang",
+    ingredients:[
+      {name:"Ma hoàng",dose:"12g",role:"Quân"},
+      {name:"Quế chi",dose:"8g",role:"Quân"},
+      {name:"Thạch cao",dose:"12g",role:"Thần"},
+      {name:"Sinh khương",dose:"8g",role:"Tá"},
+      {name:"Hạnh nhân",dose:"8g",role:"Tá"},
+      {name:"Đại táo",dose:"12g",role:"Tá"},
+      {name:"Cam thảo trích",dose:"4g",role:"Sứ"},
+    ],
+    phanTich:["Quế chi, ma hoàng: Quân","Thạch cao: Thần","Sinh khương, cam thảo, hạnh nhân, đại táo: Tá","Cam thảo: Sứ"]
+  },
+  { id:18, name:"Đại thừa khí thang",
+    ingredients:[
+      {name:"Đại hoàng",dose:"12g",role:"Quân"},
+      {name:"Mang tiêu",dose:"16g",role:"Thần"},
+      {name:"Hậu phác",dose:"12g",role:"Tá"},
+      {name:"Chỉ thực",dose:"12g",role:"Tá"},
+    ],
+    phanTich:["Đại hoàng: Quân","Mang tiêu: Thần","Hậu phác, chỉ thực: Tá"]
+  },
+  { id:19, name:"Đại hoàng phụ tử thang",
+    ingredients:[
+      {name:"Phụ tử chế",dose:"12g",role:"Quân"},
+      {name:"Đại hoàng",dose:"12g",role:"Thần"},
+      {name:"Tế tân",dose:"8g",role:"Sứ"},
+    ],
+    phanTich:["Phụ tử chế: Quân","Đại hoàng: Thần","Tế tân: Tá, sứ"]
+  },
+  { id:20, name:"Đạo xích tán",
+    ingredients:[
+      {name:"Sinh địa",dose:"12g",role:"Quân"},
+      {name:"Cam thảo",dose:"8g",role:"Thần"},
+      {name:"Mộc thông",dose:"8g",role:"Tá"},
+      {name:"Đăng tâm thảo",dose:"8g",role:"Tá"},
+    ],
+    phanTich:["Sinh địa: Quân","Cam thảo: Thần","Mộc thông, đăng tâm thảo, cam thảo: Tá","Cam thảo: Sứ"]
+  },
+  { id:21, name:"Độc hoạt kí sinh thang",
+    ingredients:[
+      {name:"Độc hoạt",dose:"8g",role:"Quân"},
+      {name:"Tang kí sinh",dose:"20g",role:"Quân"},
+      {name:"Ngưu tất",dose:"12g",role:"Thần"},
+      {name:"Đỗ trọng",dose:"12g",role:"Thần"},
+      {name:"Tần giao",dose:"12g",role:"Thần"},
+      {name:"Tế tân",dose:"4g",role:"Thần"},
+      {name:"Phòng phong",dose:"8g",role:"Thần"},
+      {name:"Sinh địa",dose:"12g",role:"Tá"},
+      {name:"Đăng tâm thảo",dose:"8g",role:"Tá"},
+      {name:"Bạch thược",dose:"12g",role:"Tá"},
+      {name:"Xuyên khung",dose:"8g",role:"Tá"},
+      {name:"Quế tâm",dose:"4g",role:"Tá"},
+      {name:"Bạch linh",dose:"12g",role:"Tá"},
+      {name:"Đương quy",dose:"12g",role:"Tá"},
+      {name:"Cam thảo",dose:"6g",role:"Sứ"},
+    ],
+    phanTich:["Độc hoạt, tang kí sinh: Quân","Ngưu tất, đỗ trọng, tần giao, tế tân, phòng phong: Thần","Sinh địa, đăng tâm, bạch thược, xuyên khung, quế tâm, bạch linh, đương quy, cam thảo: Tá","Cam thảo: Sứ"]
+  },
+  { id:22, name:"Đởm đạo bài thạch thang",
+    ingredients:[
+      {name:"Kim tiền thảo",dose:"40g",role:"Quân"},
+      {name:"Nhân trần",dose:"12g",role:"Thần"},
+      {name:"Uất kim",dose:"1g",role:"Thần"},
+      {name:"Chỉ xác",dose:"12g",role:"Thần"},
+      {name:"Mộc hương",dose:"12g",role:"Tá"},
+      {name:"Đại hoàng",dose:"12g",role:"Tá"},
+    ],
+    phanTich:["Kim tiền thảo: Quân","Nhân trần, chỉ xác, uất kim: Thần","Mộc hương, đại hoàng: Tá"]
+  },
+  { id:23, name:"Đương quy lục hoàng thang",
+    ingredients:[
+      {name:"Đương quy",dose:"12g",role:"Quân"},
+      {name:"Sinh địa",dose:"16g",role:"Thần"},
+      {name:"Thục địa",dose:"10g",role:"Thần"},
+      {name:"Hoàng kì",dose:"12g",role:"Thần"},
+      {name:"Hoàng liên",dose:"4g",role:"Tá"},
+      {name:"Hoàng cầm",dose:"8g",role:"Tá"},
+      {name:"Hoàng bá",dose:"8g",role:"Tá"},
+    ],
+    phanTich:["Đương quy: Quân","Sinh địa, thục địa, hoàng kỳ: Thần","Hoàng liên, hoàng cầm, hoàng bá: Tá"]
+  },
+  { id:24, name:"Hà xa đại tạo hoàn",
+    ingredients:[
+      {name:"Tử hà xa",dose:"10g",role:"Quân"},
+      {name:"Đảng sâm",dose:"40g",role:"Thần"},
+      {name:"Hoài sơn",dose:"40g",role:"Thần"},
+      {name:"Mạch môn",dose:"60g",role:"Thần"},
+      {name:"Hoàng bá",dose:"40g",role:"Tá"},
+      {name:"Ngưu tất",dose:"60g",role:"Tá"},
+      {name:"Thiên môn",dose:"60g",role:"Tá"},
+      {name:"Đỗ trọng",dose:"20g",role:"Tá"},
+      {name:"Tạo giác",dose:"40g",role:"Tá"},
+    ],
+    phanTich:["Tử hà xa: Quân","Đảng sâm, hoài sơn, mạch môn: Thần","Hoàng bá, ngưu tất, thiên môn, đỗ trọng, táo giác: Tá"]
+  },
+  { id:25, name:"Hoàng liên giải độc thang",
+    ingredients:[
+      {name:"Hoàng liên",dose:"12g",role:"Quân"},
+      {name:"Hoàng bá",dose:"8g",role:"Thần"},
+      {name:"Hoàng cầm",dose:"8g",role:"Thần"},
+      {name:"Chi tử",dose:"10g",role:"Tá"},
+    ],
+    phanTich:["Hoàng liên: Quân","Hoàng cầm, hoàng bá: Thần","Chi tử: Tá"]
+  },
+  { id:26, name:"Hoàng cầm thang",
+    ingredients:[
+      {name:"Hoàng cầm",dose:"12g",role:"Quân"},
+      {name:"Bạch thược",dose:"12g",role:"Thần"},
+      {name:"Cam thảo",dose:"4g",role:"Tá"},
+      {name:"Đại táo",dose:"12g",role:"Sứ"},
+    ],
+    phanTich:["Hoàng cầm: Quân","Bạch thược: Thần","Cam thảo: Tá","Đại táo: Sứ"]
+  },
+  { id:27, name:"Hoắc hương chính khí tán",
+    ingredients:[
+      {name:"Hoắc hương",dose:"12g",role:"Quân"},
+      {name:"Tô diệp",dose:"80g",role:"Thần"},
+      {name:"Bạch chỉ",dose:"80g",role:"Thần"},
+      {name:"Đại phúc bì",dose:"80g",role:"Tá"},
+      {name:"Trần bì",dose:"80g",role:"Tá"},
+      {name:"Bạch truật",dose:"80g",role:"Tá"},
+      {name:"Hậu phác",dose:"80g",role:"Tá"},
+      {name:"Bạch linh",dose:"80g",role:"Tá"},
+      {name:"Bán hạ chế",dose:"80g",role:"Tá"},
+      {name:"Cát cánh",dose:"80g",role:"Tá"},
+      {name:"Cam thảo",dose:"80g",role:"Sứ"},
+    ],
+    phanTich:["Hoắc hương: Quân","Tô diệp, bạch chỉ: Thần","Đại phúc bì, trần bì, hậu phác, bán hạ, bạch truật, bạch linh, cát cánh: Tá","Cam thảo: Sứ"]
+  },
+  { id:28, name:"Hòe hoa tán",
+    ingredients:[
+      {name:"Hòe hoa",dose:"12g",role:"Quân"},
+      {name:"Trắc bách diệp",dose:"12g",role:"Thần"},
+      {name:"Kinh giới tuệ",dose:"12g",role:"Tá"},
+      {name:"Chỉ xác",dose:"12g",role:"Tá"},
+    ],
+    phanTich:["Hòe hoa: Quân","Trắc bách diệp: Thần","Kinh giới tuệ, chỉ xác: Tá"]
+  },
+  { id:29, name:"Huyết phủ trục ứ thang",
+    ingredients:[
+      {name:"Đào nhân",dose:"16g",role:"Quân"},
+      {name:"Hồng hoa",dose:"12g",role:"Quân"},
+      {name:"Xuyên khung",dose:"6g",role:"Thần"},
+      {name:"Đương quy",dose:"12g",role:"Thần"},
+      {name:"Sinh địa",dose:"12g",role:"Thần"},
+      {name:"Ngưu tất",dose:"12g",role:"Tá"},
+      {name:"Chỉ xác",dose:"8g",role:"Tá"},
+      {name:"Sài hồ",dose:"4g",role:"Tá"},
+      {name:"Cát cánh",dose:"6g",role:"Tá"},
+      {name:"Cam thảo",dose:"4g",role:"Sứ"},
+    ],
+    phanTich:["Đào nhân, hồng hoa: Quân","Xuyên khung, đương quy, sinh địa: Thần","Ngưu tất, chỉ xác, sài hồ, cát cánh: Tá","Cam thảo: Sứ"]
+  },
+  { id:30, name:"Hữu quy hoàn",
+    ingredients:[
+      {name:"Thục địa",dose:"160g",role:"Quân"},
+      {name:"Lộc giác",dose:"80g",role:"Quân"},
+      {name:"Hoài sơn",dose:"80g",role:"Thần"},
+      {name:"Sơn thù",dose:"40g",role:"Thần"},
+      {name:"Ki tử",dose:"80g",role:"Thần"},
+      {name:"Thỏ ty tử",dose:"80g",role:"Thần"},
+      {name:"Đỗ trọng",dose:"80g",role:"Thần"},
+      {name:"Phụ tử chế",dose:"20g",role:"Thần"},
+      {name:"Nhục quế",dose:"20g",role:"Thần"},
+      {name:"Đương quy",dose:"80g",role:"Tá"},
+    ],
+    phanTich:["Thục địa, lộc giác: Quân","Hoài sơn, sơn thù, ki tử, thỏ ty tử, đỗ trọng, phụ tử chế, nhục quế: Thần","Đương quy: Tá"]
+  },
+  { id:31, name:"Kê minh tán",
+    ingredients:[
+      {name:"Ngô thù",dose:"8g",role:"Quân"},
+      {name:"Sinh khương",dose:"20g",role:"Quân"},
+      {name:"Binh lang",dose:"10g",role:"Thần"},
+      {name:"Mộc qua",dose:"40g",role:"Thần"},
+      {name:"Trần bì",dose:"40g",role:"Tá"},
+      {name:"Cát cánh",dose:"20g",role:"Tá"},
+      {name:"Tô tử",dose:"12g",role:"Tá"},
+    ],
+    phanTich:["Ngô thù, sinh khương: Quân","Binh lang, mộc qua: Thần","Trần bì, cát cánh, tô tử: Tá"]
+  },
+  { id:32, name:"Kiện ty hoàn",
+    ingredients:[
+      {name:"Bạch truật",dose:"60g",role:"Quân"},
+      {name:"Đảng sâm",dose:"20g",role:"Quân"},
+      {name:"Hoàng liên",dose:"10g",role:"Thần"},
+      {name:"Mộc hương",dose:"20g",role:"Thần"},
+      {name:"Sa nhân",dose:"20g",role:"Thần"},
+      {name:"Trần bì",dose:"40g",role:"Thần"},
+      {name:"Bạch linh",dose:"40g",role:"Tá"},
+      {name:"Sơn tra",dose:"20g",role:"Tá"},
+      {name:"Thần khúc",dose:"20g",role:"Tá"},
+      {name:"Mạch nha",dose:"20g",role:"Tá"},
+      {name:"Hoài sơn",dose:"40g",role:"Tá"},
+      {name:"Nhục đậu khấu",dose:"40g",role:"Tá"},
+      {name:"Cam thảo",dose:"12g",role:"Sứ"},
+    ],
+    phanTich:["Bạch truật, đảng sâm: Quân","Hoàng liên, mộc hương, sa nhân, trần bì: Thần","Bạch linh, sơn tra, thần khúc, mạch nha, hoài sơn, nhục đậu khấu: Tá","Cam thảo: Sứ"]
+  },
+  { id:33, name:"Lãnh hóa hoàn",
+    ingredients:[
+      {name:"Ma hoàng",dose:"10g",role:"Quân"},
+      {name:"Tế tân",dose:"10g",role:"Quân"},
+      {name:"Bán hạ chế",dose:"6g",role:"Thần"},
+      {name:"Bối mẫu",dose:"6g",role:"Thần"},
+      {name:"Đởm nam tinh",dose:"10g",role:"Thần"},
+      {name:"Hạnh nhân",dose:"10g",role:"Tá"},
+      {name:"Tử uyển",dose:"10g",role:"Tá"},
+      {name:"Khoản đông hoa",dose:"10g",role:"Tá"},
+      {name:"Bạch phàn",dose:"10g",role:"Tá"},
+      {name:"Xuyên tiêu",dose:"10g",role:"Tá"},
+      {name:"Tạo giác",dose:"6g",role:"Tá"},
+      {name:"Cam thảo",dose:"6g",role:"Sứ"},
+    ],
+    phanTich:["Ma hoàng, tế tân: Quân","Bán hạ chế, bối mẫu, đởm nam tinh: Thần","Hạnh nhân, tử uyển, khoản đông hoa, bạch phàn, xuyên tiêu, tạo giác: Tá","Cam thảo: Sứ"]
+  },
+  { id:34, name:"Linh dương câu đằng thang",
+    ingredients:[
+      {name:"Linh dương giác",dose:"4g",role:"Quân"},
+      {name:"Câu đằng",dose:"12g",role:"Quân"},
+      {name:"Bối mẫu",dose:"10g",role:"Thần"},
+      {name:"Trúc nhự",dose:"12g",role:"Thần"},
+      {name:"Sinh địa",dose:"16g",role:"Thần"},
+      {name:"Bạch thược",dose:"12g",role:"Thần"},
+      {name:"Tang diệp",dose:"12g",role:"Tá"},
+      {name:"Cúc hoa",dose:"12g",role:"Tá"},
+      {name:"Phục thần",dose:"12g",role:"Tá"},
+      {name:"Cam thảo",dose:"4g",role:"Sứ"},
+    ],
+    phanTich:["Linh dương giác, câu đằng: Quân","Bối mẫu, trúc nhự, sinh địa, bạch thược: Thần","Tang diệp, cúc hoa, phục thần: Tá","Cam thảo: Sứ"]
+  },
+  { id:35, name:"Long đởm tả can thang",
+    ingredients:[
+      {name:"Long đởm",dose:"12g",role:"Quân"},
+      {name:"Hoàng cầm",dose:"12g",role:"Thần"},
+      {name:"Chi tử",dose:"8g",role:"Thần"},
+      {name:"Trạch tả",dose:"12g",role:"Thần"},
+      {name:"Mộc thông",dose:"16g",role:"Thần"},
+      {name:"Xa tiền tử",dose:"8g",role:"Thần"},
+      {name:"Sài hồ",dose:"12g",role:"Tá"},
+      {name:"Sinh địa",dose:"8g",role:"Tá"},
+      {name:"Đương quy",dose:"12g",role:"Tá"},
+      {name:"Cam thảo",dose:"2g",role:"Sứ"},
+    ],
+    phanTich:["Long đởm: Quân","Hoàng cầm, chi tử, trạch tả, mộc thông, xa tiền tử: Thần","Sài hồ, sinh địa, đương quy: Tá","Cam thảo: Sứ"]
+  }
+];
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let currentMode = 'flash';
+let order = RECIPES.map((_,i)=>i);
+let fcIndex = 0;
+let fcFlipped = false;
+let studiedSet = new Set();
+let totalCorrect = 0;
+
+// Quiz state
+let qScore = {correct:0, wrong:0};
+let qPool = [];
+let qCurrent = null;
+let qAnswered = false;
+let qType = 0; // rotating question types
+
+// Fill state
+let fillIndex = 0;
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+function init() {
+  const sel = document.getElementById('recipe-select');
+  RECIPES.forEach(r => {
+    const o = document.createElement('option');
+    o.value = r.id; o.textContent = `${r.id}. ${r.name}`;
+    sel.appendChild(o);
+  });
+  resetSession();
+}
+
+function getFilteredRecipes() {
+  const v = document.getElementById('recipe-select').value;
+  if (v === 'all') return order.map(i => RECIPES[i]);
+  return RECIPES.filter(r => r.id == v);
+}
+
+function onRecipeChange() { resetSession(); }
+
+function resetSession() {
+  const recs = getFilteredRecipes();
+  order = recs.map(r => RECIPES.findIndex(x=>x.id===r.id));
+  fcIndex = 0; fcFlipped = false;
+  qPool = [...order]; shuffleArr(qPool); qScore={correct:0,wrong:0};
+  fillIndex = 0;
+  updateProgress();
+  if (currentMode==='flash') renderFlash();
+  if (currentMode==='quiz') { updateQScore(); nextQuestion(); }
+  if (currentMode==='fill') renderFill();
+}
+
+function shuffleOrder() {
+  shuffleArr(order);
+  fcIndex = 0; fillIndex = 0;
+  if (currentMode==='flash') { fcFlipped=false; renderFlash(); }
+  if (currentMode==='fill') renderFill();
+  updateProgress();
+}
+
+function shuffleArr(a) {
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+}
+
+// ══════════════════════════════════════════════════════
+// MODE SWITCHING
+// ══════════════════════════════════════════════════════
+function switchMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  ['flash','quiz','fill'].forEach(x=>{
+    document.getElementById('mode-'+x).style.display = x===m?'block':'none';
+  });
+  if (m==='quiz') { nextQuestion(); updateQScore(); }
+  if (m==='fill') renderFill();
+  if (m==='flash') renderFlash();
+}
+
+function updateProgress() {
+  const total = order.length;
+  const done = Math.min(fcIndex+1, total);
+  const pct = Math.round((done/total)*100);
+  document.getElementById('progress-text').textContent = `Bài ${done} / ${total}`;
+  document.getElementById('progress-pct').textContent = pct+'%';
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('stat-studied').textContent = studiedSet.size;
+  document.getElementById('stat-correct').textContent = totalCorrect;
+}
+
+// ══════════════════════════════════════════════════════
+// FLASHCARD
+// ══════════════════════════════════════════════════════
+function renderFlash() {
+  const rec = RECIPES[order[fcIndex]];
+  fcFlipped = false;
+  const card = document.getElementById('flashcard');
+  card.classList.remove('flipped');
+
+  document.getElementById('fc-num').textContent = `Bài ${String(rec.id).padStart(2,'0')}`;
+  document.getElementById('fc-title').textContent = rec.name;
+  document.getElementById('fc-back-title').textContent = rec.name;
+  document.getElementById('fc-counter').textContent = `${fcIndex+1} / ${order.length}`;
+
+  // Ingredients grid
+  const grid = document.getElementById('fc-ingredients');
+  grid.innerHTML = '';
+  rec.ingredients.forEach(ing => {
+    const roleClass = ing.role.includes('Quân')?'role-quan':ing.role.includes('Thần')?'role-than':ing.role.includes('Sứ')?'role-su':'role-ta';
+    grid.innerHTML += `<span class="ing-name">${ing.name}</span><span class="ing-dose">${ing.dose} <span class="${roleClass}">[${ing.role}]</span></span>`;
+  });
+
+  // Phan tich
+  const pt = document.getElementById('fc-phan-tich');
+  pt.innerHTML = '<div style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:#7a6a50;margin-bottom:6px;margin-top:4px">Phân tích Quân·Thần·Tá·Sứ</div>';
+  rec.phanTich.forEach(line => {
+    let cls='role-ta';
+    if(line.includes(': Quân')) cls='role-quan';
+    else if(line.includes(': Thần')) cls='role-than';
+    else if(line.includes(': Sứ')) cls='role-su';
+    pt.innerHTML += `<div class="role-line ${cls}">• ${line}</div>`;
+  });
+
+  studiedSet.add(rec.id);
+  updateProgress();
+}
+
+function flipCard() {
+  fcFlipped = !fcFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', fcFlipped);
+}
+
+function nextCard() {
+  if (fcIndex < order.length-1) { fcIndex++; renderFlash(); }
+  else showResult();
+}
+
+function prevCard() {
+  if (fcIndex > 0) { fcIndex--; renderFlash(); }
+}
+
+// ══════════════════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════════════════
+const QUIZ_TYPES = [
+  // Type 0: Which herb is Quân in <recipe>?
+  (rec) => {
+    const quan = rec.ingredients.filter(i=>i.role.includes('Quân'));
+    if (!quan.length) return null;
+    const correct = quan.map(i=>i.name).join(', ');
+    const wrongs = getWrongHerbs(rec, correct, 3);
+    return {
+      question: `Trong bài "<b>${rec.name}</b>", vị nào là <span style="color:var(--amber);font-weight:700">Quân</span>?`,
+      subtext: 'Chọn đáp án đúng',
+      correct, wrongs,
+      explanation: `<b>Quân (${correct}):</b> ${rec.phanTich.find(l=>l.includes('Quân'))||''}`
+    };
+  },
+  // Type 1: What role does <herb> play in <recipe>?
+  (rec) => {
+    const ing = rec.ingredients[Math.floor(Math.random()*rec.ingredients.length)];
+    const correct = ing.role;
+    const allRoles = ['Quân','Thần','Tá','Sứ'];
+    const wrongs = allRoles.filter(r=>r!==correct).slice(0,3);
+    return {
+      question: `Trong bài "<b>${rec.name}</b>", vị <span style="color:var(--jade-light);font-weight:700">${ing.name}</span> đóng vai trò gì?`,
+      subtext: 'Chọn vai trò đúng',
+      correct, wrongs,
+      explanation: rec.phanTich.find(l=>l.toLowerCase().includes(ing.name.toLowerCase())) || `${ing.name}: ${correct}`
+    };
+  },
+  // Type 2: Which recipe uses <herb> as Quân?
+  (rec) => {
+    const quan = rec.ingredients.filter(i=>i.role.includes('Quân'));
+    if (!quan.length) return null;
+    const herb = quan[Math.floor(Math.random()*quan.length)].name;
+    const correct = rec.name;
+    const wrongRecs = RECIPES.filter(r=>r.id!==rec.id);
+    shuffleArr(wrongRecs);
+    const wrongs = wrongRecs.slice(0,3).map(r=>r.name);
+    return {
+      question: `Bài thuốc nào dùng <span style="color:var(--amber);font-weight:700">${herb}</span> làm vị Quân?`,
+      subtext: 'Chọn bài thuốc đúng',
+      correct, wrongs,
+      explanation: `<b>${correct}</b> — ${herb} là vị Quân chủ lực trong bài này.`
+    };
+  },
+  // Type 3: How many ingredients in <recipe>?
+  (rec) => {
+    const n = rec.ingredients.length;
+    const correct = `${n} vị`;
+    const opts = new Set([n]);
+    while(opts.size<4){opts.add(Math.max(2,n+Math.floor(Math.random()*6)-3));}
+    const allOpts = [...opts].map(x=>`${x} vị`);
+    const wrongs = allOpts.filter(x=>x!==correct);
+    return {
+      question: `Bài "<b>${rec.name}</b>" có bao nhiêu vị thuốc?`,
+      subtext: '',
+      correct, wrongs,
+      explanation: `<b>${rec.name}</b> gồm ${n} vị: ${rec.ingredients.map(i=>i.name).join(', ')}.`
+    };
+  }
+];
+
+function getWrongHerbs(rec, correctStr, n) {
+  const allHerbs = [...new Set(RECIPES.flatMap(r=>r.ingredients.map(i=>i.name)))];
+  const recHerbs = rec.ingredients.map(i=>i.name);
+  const pool = allHerbs.filter(h=>!correctStr.includes(h) && !recHerbs.includes(h));
+  shuffleArr(pool);
+  return pool.slice(0,n);
+}
+
+function nextQuestion() {
+  if (!qPool.length) { qPool = [...order]; shuffleArr(qPool); }
+  const idx = qPool.pop();
+  const rec = RECIPES[idx];
+  qAnswered = false;
+
+  // Try different question types
+  let q = null;
+  for (let attempt=0; attempt<4; attempt++) {
+    const t = (qType + attempt) % QUIZ_TYPES.length;
+    q = QUIZ_TYPES[t](rec);
+    if (q) { qType = (t+1)%QUIZ_TYPES.length; break; }
+  }
+  if (!q) { nextQuestion(); return; }
+  qCurrent = q;
+
+  document.getElementById('q-question').innerHTML = q.question;
+  document.getElementById('q-subtext').textContent = q.subtext;
+  document.getElementById('q-feedback').className = 'quiz-feedback';
+  document.getElementById('q-next-btn').style.display='none';
+
+  const opts = [q.correct, ...q.wrongs];
+  shuffleArr(opts);
+
+  const container = document.getElementById('q-options');
+  container.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuiz(opt, btn);
+    container.appendChild(btn);
+  });
+}
+
+function answerQuiz(chosen, btn) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const correct = chosen === qCurrent.correct;
+  const fb = document.getElementById('q-feedback');
+
+  document.querySelectorAll('.quiz-option').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === qCurrent.correct) b.classList.add('correct');
+    else if (b === btn && !correct) b.classList.add('wrong');
+  });
+
+  if (correct) {
+    qScore.correct++; totalCorrect++;
+    fb.className = 'quiz-feedback show good';
+    fb.innerHTML = '✓ Chính xác! ' + qCurrent.explanation;
+  } else {
+    qScore.wrong++;
+    fb.className = 'quiz-feedback show bad';
+    fb.innerHTML = '✗ Chưa đúng. Đáp án: <b>' + qCurrent.correct + '</b>. ' + qCurrent.explanation;
+  }
+  updateQScore();
+  document.getElementById('q-next-btn').style.display='inline-block';
+  studiedSet.add(RECIPES[order[0]]?.id);
+  updateProgress();
+}
+
+function updateQScore() {
+  document.getElementById('q-correct').textContent = qScore.correct;
+  document.getElementById('q-wrong').textContent = qScore.wrong;
+}
+
+// ══════════════════════════════════════════════════════
+// FILL IN THE BLANK
+// ══════════════════════════════════════════════════════
+function renderFill() {
+  const rec = RECIPES[order[fillIndex % order.length]];
+  document.getElementById('fill-title').textContent = `Bài ${rec.id}: ${rec.name}`;
+  document.getElementById('fill-result').className = 'fill-result';
+  document.getElementById('fill-result').innerHTML = '';
+
+  const tbody = document.getElementById('fill-tbody');
+  tbody.innerHTML = '';
+
+  // Pair up ingredients
+  const ings = [...rec.ingredients];
+  // Randomly blank ~half roles
+  const blankSet = new Set();
+  ings.forEach((_,i) => { if(Math.random()>0.35) blankSet.add(i); });
+  if(blankSet.size===0) blankSet.add(0);
+
+  for(let i=0;i<ings.length;i+=2){
+    const a=ings[i], b=ings[i+1];
+    const tr=document.createElement('tr');
+    const aBlank = blankSet.has(i);
+    const bBlank = b && blankSet.has(i+1);
+    tr.innerHTML = `
+      <td>${a.name}</td>
+      <td>${a.dose}</td>
+      <td>${aBlank?`<input class="fill-input" data-answer="${a.role}" placeholder="?">`:`<span style="color:var(--jade);font-weight:600">${a.role}</span>`}</td>
+      ${b?`<td>${b.name}</td><td>${b.dose}</td><td>${bBlank?`<input class="fill-input" data-answer="${b.role}" placeholder="?">`:`<span style="color:var(--jade);font-weight:600">${b.role}</span>`}</td>`:`<td colspan="3"></td>`}
+    `;
+    tbody.appendChild(tr);
+  }
+
+  studiedSet.add(rec.id);
+  updateProgress();
+}
+
+function normalize(s) {
+  return s.toLowerCase().trim()
+    .replace(/quân/g,'quan').replace(/thần/g,'than').replace(/tá/g,'ta').replace(/sứ/g,'su');
+}
+
+function checkFill() {
+  const inputs = document.querySelectorAll('#fill-tbody .fill-input');
+  let correct=0, total=inputs.length;
+  inputs.forEach(inp => {
+    const ans = inp.dataset.answer;
+    const val = inp.value.trim();
+    if(!val){ inp.classList.remove('correct','wrong'); return; }
+    const ok = normalize(val)===normalize(ans) || val.toLowerCase()===ans.toLowerCase();
+    inp.classList.toggle('correct',ok);
+    inp.classList.toggle('wrong',!ok);
+    if(ok){correct++;}
+  });
+  const filled = [...inputs].filter(i=>i.value.trim()).length;
+  const res = document.getElementById('fill-result');
+  res.className='fill-result show';
+  if(filled===0){ res.innerHTML='⚠️ Hãy điền vào các ô trước.'; return; }
+  res.innerHTML = `Đúng <b>${correct}/${filled}</b> ô đã điền.${correct===total?` 🎉 Hoàn hảo!`:''}`;
+  if(correct===filled && filled===total){ totalCorrect++; updateProgress(); }
+}
+
+function revealFill() {
+  document.querySelectorAll('#fill-tbody .fill-input').forEach(inp => {
+    inp.value = inp.dataset.answer;
+    inp.classList.add('revealed');
+    inp.classList.remove('correct','wrong');
+    inp.disabled = true;
+  });
+}
+
+function nextFill() {
+  fillIndex++;
+  if(fillIndex >= order.length){
+    fillIndex=0;
+    showResult();
+    return;
+  }
+  renderFill();
+  updateProgress();
+}
+
+// ══════════════════════════════════════════════════════
+// RESULT
+// ══════════════════════════════════════════════════════
+function showResult() {
+  const total = order.length;
+  const pct = Math.round((totalCorrect/Math.max(1,total))*100);
+  const emoji = pct>=80?'🏆':pct>=60?'🎉':pct>=40?'👍':'💪';
+  const msg = pct>=80?'Xuất sắc! Bạn đã nắm vững các bài thuốc.':pct>=60?'Khá tốt! Tiếp tục ôn luyện nhé.':pct>=40?'Cố lên! Hãy xem lại các bài chưa thuộc.':'Hãy ôn lại từ đầu, bạn sẽ làm được!';
+  document.getElementById('res-emoji').textContent=emoji;
+  document.getElementById('res-score').textContent=`${totalCorrect} / ${total}`;
+  document.getElementById('res-msg').textContent=msg;
+  document.getElementById('result-overlay').classList.add('show');
+}
+
+function closeResult() {
+  document.getElementById('result-overlay').classList.remove('show');
+  totalCorrect=0; resetSession();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if(currentMode==='flash'){
+    if(e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); nextCard(); }
+    else if(e.key==='ArrowLeft') prevCard();
+    else if(e.key==='Enter'||e.key==='f') flipCard();
+  }
+});
+
+init();
+</script>
+</body>
+</html>
